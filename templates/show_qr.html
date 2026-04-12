@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Your QR Code - ProGesture</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: #e9e9e9;
+    text-align: center;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+
+    height:100vh;
+    overflow:hidden; /* 🚀 no scroll */
+}
+
+/* ===== CYBER BACKGROUND ===== */
+.cyber-pattern{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+
+  background-color:#e9e9e9;
+
+  background-image:
+    radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.12) 100%),
+    linear-gradient(rgba(0,0,0,0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.08) 1px, transparent 1px),
+    linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+
+  background-size:
+    100% 100%,
+    60px 60px,
+    60px 60px,
+    20px 20px,
+    20px 20px;
+
+  animation:cyber-move 12s linear infinite;
+}
+
+@keyframes cyber-move{
+  100%{
+    background-position:
+      0 0,
+      60px 60px,
+      60px 60px,
+      40px 40px,
+      40px 40px;
+  }
+}
+
+/* ===== TOPBAR ===== */
+.topbar{
+  position:fixed;
+  inset:0 0 auto 0;
+  height:56px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px;
+
+  z-index:1200;
+  pointer-events:none;
+}
+
+.topbar .btn{
+  pointer-events:auto;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+
+  height:32px;
+  padding:0 14px;
+
+  font-size:12px;
+  font-weight:600;
+
+  border-radius:10px;
+  text-decoration:none;
+
+  transition:.2s ease;
+}
+
+.btn-back{
+  color:#fff;
+  background:linear-gradient(135deg, #800000, #a00000);
+  box-shadow:0 4px 12px rgba(128,0,0,0.25);
+
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+
+.btn-back:hover{
+  transform:translateY(-1px);
+}
+
+/* ===== HEADER ===== */
+.brand-header{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+.brand-logo{
+  width:60px;
+  height:60px;
+  object-fit:cover;
+}
+
+.brand-text{
+  font-size:36px;
+  font-weight:700;
+  color:#800000;
+  letter-spacing:1px;
+}
+
+.top-message{
+  font-size:14px;
+  color:#4b5563;
+  margin-top:4px;
+  margin-bottom:10px;
+}
+
+/* ===== CARD ===== */
+.box {
+    margin: 12px auto;
+    width: 420px;
+    max-width: 92%;
+
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(10px);
+
+    border-radius: 22px;
+    padding: 22px 24px;
+
+    box-shadow:
+        0 20px 40px rgba(0,0,0,0.12),
+        0 2px 6px rgba(0,0,0,0.05);
+
+    border: 1px solid rgba(255,255,255,0.4);
+}
+
+.box h2 {
+    color: #800000;
+    font-size: 18px;
+    margin-bottom: 2px;   /* 👈 tighter */
+}
+
+/* ===== QR ===== */
+img {
+    width: 165px;
+    margin: 4px 0;   /* 👈 tighter */
+}
+
+.success {
+    font-weight: bold;
+    color: #16a34a;
+    margin-top: 2px;     /* 👈 tighter */
+    margin-bottom: 0;
+    font-size: 14px;
+}
+
+.welcome {
+    color: #800000;
+    margin-top: 2px;
+    margin-bottom: 6px;  /* 👈 tighter */
+    font-weight: 500;
+    font-size: 13.5px;
+}
+
+.box h2,
+.box img,
+.success,
+.welcome {
+    line-height: 1.2;
+}
+
+/* ===== LIST ===== */
+.list {
+    text-align: center;
+    font-size: 12.5px;
+    margin: 8px 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* centers each row */
+}
+
+.list div {
+    margin: 4px 0;
+
+    display: grid;
+    grid-template-columns: 20px auto; /* tighter icon-text spacing */
+    align-items: center;
+    column-gap: 8px; /* clean space between icon and text */
+
+    width: 280px;
+}
+
+.check, .cross {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 18px;
+    height: 18px;
+
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: bold;
+
+    margin: 0; /* IMPORTANT: remove spacing */
+}
+
+.list div span:last-child {
+    text-align: left;      /* align text beside icon */
+}
+.check {
+    background: #16a34a;
+    color: white;
+}
+
+.cross {
+    background: #dc2626;
+    color: white;
+}
+
+/* ===== BUTTON ===== */
+.download-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    background: #800000;
+    color: white;
+
+    height: 36px;
+    padding: 0 18px;
+
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+
+    margin-top: 6px;
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+/* 👇 ADD THIS */
+.download-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+.download-btn:hover {
+    background: #a00000;
+}
+
+.download-btn:hover {
+    opacity: 0.9;
+}
+
+.back-login {
+    display: block;
+    margin-top: 8px;
+    color: #555;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.top-header{
+  margin-top:50px; /* 👈 clean unified control */
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="cyber-pattern"></div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+    <a href="{% if from_profile %}{{ url_for('dashboard') }}{% else %}/{% endif %}" class="btn btn-back">
+      <i class="fa-solid fa-arrow-left"></i>
+        {% if from_profile %}
+          Back to Dashboard
+        {% else %}
+          Back to Home
+        {% endif %}
+    </a>
+</div>
+
+<!-- HEADER -->
+<div class="top-header">
+  <div class="brand-header">
+      <img src="/static/images/pup_logo.png" class="brand-logo">
+      <span class="brand-text">PROGESTURE</span>
+  </div>
+
+  <p class="top-message">
+      Download your QR Code for faster login.
+  </p>
+</div>
+
+<!-- CARD -->
+<div class="box">
+    <h2>QR Code</h2>
+
+    <img src="{{ qr_url }}" alt="QR Code">
+
+    <div class="success">
+      {% if from_profile %}
+        Username / Password Changed Successfully
+      {% else %}
+        Signup Successful
+      {% endif %}
+    </div>
+    <div class="welcome">Welcome, {{ username }}</div>
+
+    <div class="list">
+        <div><span class="check">✓</span>Use the website to scan your QR code.</div>
+        <div><span class="check">✓</span>Keep a copy in case of losing the original.</div>
+
+        <div><span class="cross">✕</span>Do not share your QR code with anyone.</div>
+        <div><span class="cross">✕</span>Avoid posting your QR code online.</div>
+    </div>
+
+    <a href="{{ qr_url }}" download class="download-btn">
+        <i data-feather="download"></i>
+        Download QR Code
+    </a>
+
+    <a href="{% if from_profile %}{{ url_for('profile') }}{% else %}{{ url_for('login') }}{% endif %}" class="back-login">
+        ← {% if from_profile %}Back to Profile{% else %}Proceed to Login{% endif %}
+    </a>
+</div>
+
+<script src="https://unpkg.com/feather-icons"></script>
+<script>
+  feather.replace()
+</script>
+
+</body>
+</html>
