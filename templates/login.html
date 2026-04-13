@@ -623,6 +623,20 @@
       margin-bottom:10px;
       margin-left:5px; /* aligns with inputs */
       }
+
+    .error-message {
+      width: 84%;
+      margin: 5px 0 10px 0;
+      padding: 10px;
+      border-radius: 6px;
+
+      background: #ffe5e5;
+      color: #b00020;
+      font-size: 13px;
+      font-weight: 500;
+
+      border: 1px solid #ffb3b3;
+    }
   </style>
 </head>
 <body>
@@ -674,6 +688,14 @@
 <div class="right-side">
 
   <p class="form-title">Log in to your Account</p>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="error-message">
+        {{ messages[0] }}
+      </div>
+    {% endif %}
+  {% endwith %}
 
   <label class="input-group">
     <i class="fa-solid fa-at"></i>
