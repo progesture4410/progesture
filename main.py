@@ -548,6 +548,21 @@ def upload():
     filepath = os.path.join(user_folder, file.filename)
     file.save(filepath)
 
+    # ================================
+    # SAVE METADATA TO FIRESTORE
+    # ================================
+    file_size = os.path.getsize(filepath)
+    file_ext = os.path.splitext(file.filename)[1].lower()
+
+    db.collection("files").add({
+        "filename": file.filename,
+        "user": user,
+        "size": file_size,
+        "type": file_ext,
+        "path": filepath,
+        "created_at": datetime.now()
+    })
+
     generate_thumbnail(filepath, file.filename)
 
     return redirect(url_for("dashboard"))
@@ -933,6 +948,17 @@ def delete_permanently(filename):
     # delete file from disk
     if os.path.exists(filepath):
         os.remove(filepath)
+
+    # ================================
+    # DELETE FROM FIRESTORE
+    # ================================
+    docs = db.collection("files") \
+        .where("filename", "==", filename) \
+        .where("user", "==", user) \
+        .stream()
+
+    for doc in docs:
+        db.collection("files").document(doc.id).delete()
 
     return redirect(url_for("trash_page"))
 
