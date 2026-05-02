@@ -157,6 +157,9 @@ body {
 
   cursor: pointer;
   transition: 0.25s;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 14px;
 }
 
 .submit:hover {
@@ -342,18 +345,14 @@ body {
     <span>Password</span>
   </label>
 
-  <!-- EMAIL -->
-  <label class="input-group">
-    <i class="fa-solid fa-envelope"></i>
-    <input class="input" type="email" name="email" value="{{ profile.email }}" required>
-    <span>Gmail</span>
-  </label>
-
-
 
   <button id="saveBtn" class="submit" type="submit">
-    Save Changes
+  Save Changes
   </button>
+
+  <a href="{{ url_for('show_qr') }}" class="submit" style="display:block; text-align:center; text-decoration:none; width:100%;">
+    Show My QR Code
+  </a>
 
   <a href="{{ url_for('dashboard') }}" class="back">← Back to Dashboard</a>
 
