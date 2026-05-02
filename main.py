@@ -411,7 +411,8 @@ def signup():
             "surname": surname,
             "username": username,
             "email": email,
-            "password": password
+            "password": password,
+            "qr_code": f"qrcodes/{username}.png"  # ✅ ADD THIS
         }
 
         # Generate QR
@@ -1079,29 +1080,6 @@ def profile():
             sensitive_changed = True
 
         # ======================
-        # PROFILE PICTURE
-        # ======================
-        if "profile_pic" in request.files:
-
-            file = request.files["profile_pic"]
-
-            if file and file.filename != "":
-                pic_folder = os.path.join("static", "profile_pics")
-                os.makedirs(pic_folder, exist_ok=True)
-
-                filepath = os.path.join(pic_folder, f"{current_user}.png")
-                file.save(filepath)
-
-                import time
-
-                db.collection("users").document(current_user).update({
-                    "profile_pic": f"profile_pics/{current_user}.png",
-                    "updated_at": time.time()
-                })
-
-                updated = True
-
-        # ======================
         # FINALIZE UPDATE (QR + EMAIL)
         # ======================
         if updated:
@@ -1129,6 +1107,11 @@ def profile():
                 qr_path = os.path.join(qr_folder, f"{current_user}.png")
                 qr.save(qr_path)
 
+                # ✅ SAVE QR PATH TO FIRESTORE
+                db.collection("users").document(current_user).update({
+                    "qr_code": f"qrcodes/{current_user}.png"
+                })
+
                 # 🔥 FORCE SHOW QR PAGE (THIS IS THE MISSING PART)
                 qr_url = url_for("static", filename=f"qrcodes/{current_user}.png")
 
@@ -1136,7 +1119,8 @@ def profile():
                     "show_qr.html",
                     qr_url=qr_url,
                     username=current_user,
-                    from_profile=True
+                    from_profile=True,
+                    manual_view=False
                 )
 
     # ======================
@@ -1148,6 +1132,25 @@ def profile():
         "profile.html",
         profile=user_data,
         full_name=full_name
+    )
+
+
+@app.route("/show_qr")
+def show_qr():
+    if not require_login():
+        return redirect(url_for("login"))
+
+    username = session["username"]
+
+    qr_path = f"qrcodes/{username}.png"
+    qr_url = url_for("static", filename=qr_path)
+
+    return render_template(
+        "show_qr.html",
+        qr_url=qr_url,
+        username=username,
+        from_profile=True,
+        manual_view=True
     )
 
 def time_ago(timestamp):
