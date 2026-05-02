@@ -328,7 +328,11 @@ img {
 
     <div class="success">
       {% if from_profile %}
-        Username / Password Changed Successfully
+        {% if manual_view %}
+          Here is your QR Code
+        {% else %}
+          Username / Password Changed Successfully
+        {% endif %}
       {% else %}
         Signup Successful
       {% endif %}
